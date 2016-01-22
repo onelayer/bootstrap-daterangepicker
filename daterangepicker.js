@@ -316,7 +316,7 @@
                 // after the maximum, don't display this range option at all.
                 if ((this.minDate && end.isBefore(this.minDate)) || (maxDate && start.isAfter(maxDate)))
                     continue;
-                
+
                 //Support unicode chars in the range names.
                 var elem = document.createElement('textarea');
                 elem.innerHTML = range;
@@ -479,6 +479,14 @@
             if (this.timePicker && this.timePickerIncrement)
                 this.endDate.minute(Math.round(this.endDate.minute() / this.timePickerIncrement) * this.timePickerIncrement);
 
+            if (this.timePicker && !this.singleDatePicker) {
+                if (this.startDate.hours() === 0 && this.startDate.minutes() === 0) {
+                    this.endDate.endOf('day');
+                } else {
+                    this.endDate.add(1, 'hour');
+                }
+            }
+
             if (this.endDate.isBefore(this.startDate))
                 this.endDate = this.startDate.clone();
 
@@ -493,7 +501,7 @@
             if (!this.isShowing)
                 this.updateElement();
 
-            this.updateMonthsInView();
+            this.updateView();
         },
 
         isInvalidDate: function() {
@@ -540,7 +548,7 @@
                 } else {
                     this.rightCalendar.month = this.startDate.clone().date(2).add(1, 'month');
                 }
-                
+
             } else {
                 if (this.leftCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM') && this.rightCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM')) {
                     this.leftCalendar.month = this.startDate.clone().date(2);
@@ -1167,7 +1175,7 @@
                 this.container.find('input[name=daterangepicker_start]').val(dates[0].format(this.locale.format));
                 this.container.find('input[name=daterangepicker_end]').val(dates[1].format(this.locale.format));
             }
-            
+
         },
 
         clickRange: function(e) {
@@ -1298,7 +1306,7 @@
                 this.endDate = null;
                 this.setStartDate(date.clone());
             } else if (!this.endDate && date.isBefore(this.startDate)) {
-                //special case: clicking the same date for start/end, 
+                //special case: clicking the same date for start/end,
                 //but the time of the end date is before the start date
                 this.setEndDate(this.startDate.clone());
             } else {
@@ -1520,7 +1528,7 @@
         });
         return this;
     };
-    
+
     return DateRangePicker;
 
 }));
